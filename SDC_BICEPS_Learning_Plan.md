@@ -29,6 +29,7 @@ This learning plan will guide you through understanding the Service-Oriented Dev
 1. Read ISO IEEE 11073-10207 PDF (Sections 1-3)
 2. Review SDPi Profile overview from IHE website
 3. Study the relationship diagram between SDC components
+4. Review BICEPS_Extensions_Guide.md for extension mechanisms
 
 **Real-World Example:**
 Think of a modern ICU where multiple devices (ventilators, monitors, pumps) need to communicate seamlessly. SDC provides the framework for this communication, while BICEPS defines how medical data is structured and exchanged.

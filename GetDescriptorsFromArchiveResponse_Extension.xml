@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+GetDescriptorsFromArchiveResponse with uint32 DevicevalueCount Extension
+This example shows how to add a custom uint32 extension to the archive response
+-->
+<s12:Envelope
+    xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:msg="http://standards.ieee.org/downloads/11073/11073-10207-2017/message"
+    xmlns:pm="http://standards.ieee.org/downloads/11073/11073-10207-2017/participant"
+    xmlns:ext="http://standards.ieee.org/downloads/11073/11073-10207-2017/extension"
+    xmlns:sdpi="urn:oid:1.3.6.1.4.1.19376.1.6.2.10.1.1.1"
+    xmlns:custom="http://yourcompany.com/biceps/extensions"
+    xmlns:wsa="http://www.w3.org/2005/08/addressing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <s12:Header>
+        <wsa:Action>http://standards.ieee.org/downloads/11073/11073-20701-2018/ArchiveService/GetDescriptorsFromArchiveResponse</wsa:Action>
+        <wsa:MessageID>urn:uuid:archive-response-123456</wsa:MessageID>
+        <wsa:RelatesTo>urn:uuid:archive-request-654321</wsa:RelatesTo>
+    </s12:Header>
+    
+    <s12:Body>
+        <msg:GetDescriptorsFromArchiveResponse 
+            MdibVersion="245" 
+            SequenceId="urn:uuid:archive-seq-789" 
+            InstanceId="archive001">
+            
+            <!-- Extension with custom uint32 DevicevalueCount -->
+            <ext:Extension>
+                <!-- Using custom namespace for DevicevalueCount -->
+                <custom:DevicevalueCount>42</custom:DevicevalueCount>
+                
+                <!-- Alternative using SDPi CodedIntegerAttribute for better interoperability -->
+                <sdpi:CodedAttributes>
+                    <sdpi:CodedIntegerAttribute>
+                        <sdpi:MdcAttribute Code="999001" SymbolicCodeName="MDC_ATTR_DEVICE_VALUE_COUNT"/>
+                        <sdpi:Value>42</sdpi:Value>
+                    </sdpi:CodedIntegerAttribute>
+                </sdpi:CodedAttributes>
+            </ext:Extension>
+            
+            <!-- Archive Response Content -->
+            <msg:MdDescription DescriptionVersion="15">
+                
+                <!-- Medical Device System (MDS) -->
+                <pm:Mds Handle="mds0">
+                    <pm:Type Code="69650">
+                        <pm:ConceptDescription>Patient Monitor</pm:ConceptDescription>
+                    </pm:Type>
+                    
+                    <!-- Equipment Identifier Extension -->
+                    <ext:Extension>
+                        <sdpi:EquipmentIdentifier>urn:uuid:9c057bb4-8d83-4fc1-9ad1-832ad543e2b2</sdpi:EquipmentIdentifier>
+                        <sdpi:CodedAttributes>
+                            <sdpi:CodedStringAttribute>
+                                <sdpi:MdcAttribute Code="67886" SymbolicCodeName="MDC_ATTR_ID_SOFT"/>
+                                <sdpi:Value>ICU_Monitor_205</sdpi:Value>
+                            </sdpi:CodedStringAttribute>
+                        </sdpi:CodedAttributes>
+                    </ext:Extension>
+                    
+                    <!-- System Context -->
+                    <pm:SystemContext Handle="system_context">
+                        <pm:Type Code="69473">
+                            <pm:ConceptDescription>System context</pm:ConceptDescription>
+                        </pm:Type>
+                        
+                        <!-- Patient Context -->
+                        <pm:PatientContext Handle="patient_context">
+                            <pm:Type Code="69462">
+                                <pm:ConceptDescription>Patient context</pm:ConceptDescription>
+                            </pm:Type>
+                        </pm:PatientContext>
+                        
+                        <!-- Location Context -->
+                        <pm:LocationContext Handle="location_context">
+                            <pm:Type Code="69464">
+                                <pm:ConceptDescription>Location context</pm:ConceptDescription>
+                            </pm:Type>
+                        </pm:LocationContext>
+                    </pm:SystemContext>
+                    
+                    <!-- Virtual Medical Device (VMD) -->
+                    <pm:Vmd Handle="vmd0">
+                        <pm:Type Code="69656">
+                            <pm:ConceptDescription>Vital Signs Monitor</pm:ConceptDescription>
+                        </pm:Type>
+                        
+                        <!-- Channel for Vital Signs -->
+                        <pm:Channel Handle="vital_signs_channel">
+                            <pm:Type Code="69632">
+                                <pm:ConceptDescription>Vital Signs Channel</pm:ConceptDescription>
+                            </pm:Type>
+                            
+                            <!-- Heart Rate Metric -->
+                            <pm:Metric xsi:type="pm:NumericMetricDescriptor" Handle="heart_rate">
+                                <pm:Type Code="147842">
+                                    <pm:ConceptDescription>Heart rate</pm:ConceptDescription>
+                                </pm:Type>
+                                <pm:Unit Code="264864">
+                                    <pm:ConceptDescription>beats per minute</pm:ConceptDescription>
+                                </pm:Unit>
+                                <pm:DeterminationPeriod>PT5S</pm:DeterminationPeriod>
+                                <pm:Resolution>1</pm:Resolution>
+                                <pm:TechnicalRange Lower="30" Upper="300"/>
+                                <pm:PhysiologicalRange Lower="40" Upper="180"/>
+                            </pm:Metric>
+                            
+                            <!-- Blood Pressure Systolic -->
+                            <pm:Metric xsi:type="pm:NumericMetricDescriptor" Handle="bp_sys">
+                                <pm:Type Code="150017">
+                                    <pm:ConceptDescription>Systolic Blood Pressure</pm:ConceptDescription>
+                                </pm:Type>
+                                <pm:Unit Code="266016">
+                                    <pm:ConceptDescription>mmHg</pm:ConceptDescription>
+                                </pm:Unit>
+                                <pm:DeterminationPeriod>PT30S</pm:DeterminationPeriod>
+                                <pm:Resolution>1</pm:Resolution>
+                                <pm:TechnicalRange Lower="40" Upper="280"/>
+                                <pm:PhysiologicalRange Lower="80" Upper="200"/>
+                                
+                                <!-- Compound Metric Relation -->
+                                <pm:Relation Kind="SST" Entries="bp_dia bp_mean">
+                                    <pm:Code Code="150020">
+                                        <pm:ConceptDescription>Noninvasive blood pressure</pm:ConceptDescription>
+                                    </pm:Code>
+                                </pm:Relation>
+                            </pm:Metric>
+                            
+                            <!-- Blood Pressure Diastolic -->
+                            <pm:Metric xsi:type="pm:NumericMetricDescriptor" Handle="bp_dia">
+                                <pm:Type Code="150018">
+                                    <pm:ConceptDescription>Diastolic Blood Pressure</pm:ConceptDescription>
+                                </pm:Type>
+                                <pm:Unit Code="266016">
+                                    <pm:ConceptDescription>mmHg</pm:ConceptDescription>
+                                </pm:Unit>
+                                <pm:DeterminationPeriod>PT30S</pm:DeterminationPeriod>
+                                <pm:Resolution>1</pm:Resolution>
+                                <pm:TechnicalRange Lower="20" Upper="200"/>
+                                <pm:PhysiologicalRange Lower="40" Upper="120"/>
+                                
+                                <!-- Compound Metric Relation -->
+                                <pm:Relation Kind="SST" Entries="bp_sys bp_mean">
+                                    <pm:Code Code="150020">
+                                        <pm:ConceptDescription>Noninvasive blood pressure</pm:ConceptDescription>
+                                    </pm:Code>
+                                </pm:Relation>
+                            </pm:Metric>
+                            
+                            <!-- SpO2 Metric -->
+                            <pm:Metric xsi:type="pm:NumericMetricDescriptor" Handle="spo2">
+                                <pm:Type Code="150456">
+                                    <pm:ConceptDescription>Oxygen saturation</pm:ConceptDescription>
+                                </pm:Type>
+                                <pm:Unit Code="262688">
+                                    <pm:ConceptDescription>percent</pm:ConceptDescription>
+                                </pm:Unit>
+                                <pm:DeterminationPeriod>PT1S</pm:DeterminationPeriod>
+                                <pm:Resolution>1</pm:Resolution>
+                                <pm:TechnicalRange Lower="0" Upper="100"/>
+                                <pm:PhysiologicalRange Lower="85" Upper="100"/>
+                            </pm:Metric>
+                        </pm:Channel>
+                    </pm:Vmd>
+                    
+                    <!-- Clock Descriptor -->
+                    <pm:Clock Handle="clock">
+                        <pm:Type Code="69635">
+                            <pm:ConceptDescription>Clock</pm:ConceptDescription>
+                        </pm:Type>
+                        
+                        <!-- Timestamp Versioning Extension -->
+                        <ext:Extension>
+                            <sdpi:EpochSupport Version="1"/>
+                        </ext:Extension>
+                    </pm:Clock>
+                    
+                    <!-- Production Specification -->
+                    <pm:ProductionSpecification>
+                        <pm:SpecType Code="531970" SymbolicCodeName="MDC_ID_MODEL_MANUFACTURER"/>
+                        <pm:ProductionSpec>ACME Medical Systems</pm:ProductionSpec>
+                    </pm:ProductionSpecification>
+                    
+                    <pm:ProductionSpecification>
+                        <pm:SpecType Code="531969" SymbolicCodeName="MDC_ID_MODEL_NUMBER"/>
+                        <pm:ProductionSpec>VitalWatch-Pro-3000</pm:ProductionSpec>
+                    </pm:ProductionSpecification>
+                    
+                    <pm:ProductionSpecification>
+                        <pm:SpecType Code="531977" SymbolicCodeName="MDC_ID_PROD_SPEC_FW"/>
+                        <pm:ProductionSpec>v2.1.3-build.456</pm:ProductionSpec>
+                    </pm:ProductionSpecification>
+                    
+                    <pm:ProductionSpecification>
+                        <pm:SpecType Code="531972" SymbolicCodeName="MDC_ID_PROD_SPEC_SERIAL"/>
+                        <pm:ProductionSpec>VW123456789</pm:ProductionSpec>
+                    </pm:ProductionSpecification>
+                    
+                    <!-- Text Localization Catalog -->
+                    <pm:ProductionSpecification>
+                        <pm:SpecType Code="68008" SymbolicCodeName="MDC_ATTR_VMS_MDS_TEXT_CAT"/>
+                        <pm:ProductionSpec>urn:oid:1.3.6.1.4.1.1234.4.1.2.1.2.2</pm:ProductionSpec>
+                    </pm:ProductionSpecification>
+                </pm:Mds>
+            </msg:MdDescription>
+        </msg:GetDescriptorsFromArchiveResponse>
+    </s12:Body>
+</s12:Envelope>
